@@ -17,6 +17,8 @@ fi
 	--enable-rubyinterp=yes \
 	--enable-pythoninterp \
 	--with-python-config-dir=/usr/lib/python*/config \
+	--enable-tclinterp \
+	--with-tclsh=/usr/bin/tclsh \
 	--with-ruby-command=/opt/objvim/bin/objvim_ruby \
 	--with-compiledby='Jason Felice <jason.m.felice@gmail.com>'
 make
