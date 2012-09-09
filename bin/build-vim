@@ -3,7 +3,7 @@
 set -e
 
 rm -rf vim
-hg clone https://vim.googlecode.com/hg/ vim
+tar xzf src/vim*.tar.gz
 cd vim
 
 if command -v rvm >/dev/null 2>&1
