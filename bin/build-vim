@@ -1,4 +1,5 @@
 #!/bin/bash
+. config.sh
 
 set -e
 
@@ -12,16 +13,16 @@ then
 fi
 
 ./configure \
-	--prefix=/opt/objvim \
+	--prefix="${objvim_prefix}" \
 	--with-features=huge \
 	--enable-rubyinterp=yes \
-	--with-ruby-command=/opt/objvim/bin/objvim_ruby \
+	--with-ruby-command="${objvim_prefix}/bin/objvim_ruby" \
 	--enable-pythoninterp \
 	--with-python-config-dir=/usr/lib/python*/config \
 	--enable-tclinterp \
 	--with-tclsh=/usr/bin/tclsh \
 	--enable-perlinterp \
-	--with-compiledby='Jason Felice <jason.m.felice@gmail.com>'
+	--with-compiledby="${objvim_compiledby}"
 make
 make install
 	

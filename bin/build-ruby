@@ -1,15 +1,16 @@
 #!/bin/bash
+. config.sh
 
 set -e
 rm -rf ruby-*
 tar xzf src/ruby-*.tar.gz
 cd ruby-*
 
-export CFLAGS="-I/opt/objvim/include"
-export LDFLAGS="-L/opt/objvim/lib"
+export CFLAGS="-I${objvim_prefix}/include"
+export LDFLAGS="-L${objvim_prefix}/lib"
 ./configure \
 	--program-prefix=objvim_ \
-	--prefix=/opt/objvim \
+	--prefix=${objvim_prefix} \
 	--enable-shared
 make
 make install

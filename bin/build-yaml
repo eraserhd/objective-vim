@@ -1,9 +1,10 @@
 #!/bin/bash
+. config.sh
 
 set -e
 rm -rf yaml-*
 tar xzf src/yaml-*.tar.gz
 cd yaml-*
-./configure --prefix=/opt/objvim
+./configure --prefix=${objvim_prefix}
 make
 make install

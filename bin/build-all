@@ -1,7 +1,10 @@
 #!/bin/bash
 
 set -e
+
 rm -rf /opt/objvim
+mkdir /opt/objvim
+
 ./bin/build-yaml
 ./bin/build-ruby
 ./bin/build-vim
