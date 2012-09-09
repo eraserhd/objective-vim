@@ -4,6 +4,9 @@ set -e
 rm -rf ruby-*
 tar xzf src/ruby-*.tar.gz
 cd ruby-*
+
+export CFLAGS="-I/opt/objvim/include"
+export LDFLAGS="-L/opt/objvim/lib"
 ./configure \
 	--program-prefix=objvim_ \
 	--prefix=/opt/objvim \

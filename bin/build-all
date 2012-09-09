@@ -2,5 +2,6 @@
 
 set -e
 rm -rf /opt/objvim
+./bin/build-yaml
 ./bin/build-ruby
 ./bin/build-vim
