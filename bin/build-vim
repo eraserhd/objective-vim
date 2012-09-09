@@ -10,12 +10,14 @@ then
 	rvm use system
 fi
 
+make clean
+make distclean
 ./configure \
 	--prefix=/opt/objvim \
 	--with-features=huge \
+	--enable-rubyinterp=yes \
+	--with-ruby-command=/opt/objvim/bin/objvim_ruby \
 	--with-compiledby='Jason Felice <jason.m.felice@gmail.com>'
 make
 make install
 	
-#	--enable-rubyinterp=dynamic \
-#	--with-ruby-command=/usr/bin/ruby \
