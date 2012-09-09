@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+rm -rf /opt/objvim
+./bin/build-ruby
+./bin/build-vim
