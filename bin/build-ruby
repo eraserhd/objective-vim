@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+rm -rf ruby-*
+tar xzf src/ruby-*.tar.gz
+cd ruby-*
+./configure \
+	--program-prefix=objvim_ \
+	--prefix=/opt/objvim \
+	--enable-shared
+make
+make install
+

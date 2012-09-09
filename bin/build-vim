@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+#hg clone https://vim.googlecode.com/hg/ vim
+cd vim
+
+if command -v rvm >/dev/null 2>&1
+then
+	rvm use system
+fi
+
+./configure \
+	--prefix=/opt/objvim \
+	--with-features=huge \
+	--with-compiledby='Jason Felice <jason.m.felice@gmail.com>'
+make
+make install
+	
+#	--enable-rubyinterp=dynamic \
+#	--with-ruby-command=/usr/bin/ruby \
