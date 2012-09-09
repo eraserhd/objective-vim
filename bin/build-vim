@@ -2,7 +2,8 @@
 
 set -e
 
-#hg clone https://vim.googlecode.com/hg/ vim
+rm -rf vim
+hg clone https://vim.googlecode.com/hg/ vim
 cd vim
 
 if command -v rvm >/dev/null 2>&1
@@ -10,8 +11,6 @@ then
 	rvm use system
 fi
 
-make clean
-make distclean
 ./configure \
 	--prefix=/opt/objvim \
 	--with-features=huge \
