@@ -23,4 +23,6 @@ fi
 	--with-compiledby="${objvim_compiledby}"
 make
 make install
-	
+
+cd ${objvim_prefix}/bin
+ln -sf vim vi
