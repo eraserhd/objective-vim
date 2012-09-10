@@ -47,22 +47,7 @@ function build() {
 	popd
 }
 
-function build_yaml() {
-	build yaml
-}
-
-function build_ruby() {
-	build ruby
-}
-
-function build_vim() {
-	if command -v rvm >/dev/null 2>&1
-	then
-		rvm use system
-	fi
-
-	build vim
-
+function symlink_vi() {
 	( cd ${objvim_prefix}/bin && ln -sf vim vi )
 }
 
@@ -77,9 +62,15 @@ function build_all() {
 	rm -rf /opt/objvim
 	mkdir /opt/objvim
 
-	build_yaml
-	build_ruby
-	build_vim
+	if command -v rvm >/dev/null 2>&1
+	then
+		rvm use system
+	fi
+
+	build yaml
+	build ruby
+	build vim
+	symlink_vi
 	install_pathogen
 }
 
