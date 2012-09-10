@@ -31,3 +31,29 @@ function build_ruby() {
 	make install
 }
 
+function build_vim() {
+	unpack vim
+
+	if command -v rvm >/dev/null 2>&1
+	then
+		rvm use system
+	fi
+
+	./configure \
+		--prefix="${objvim_prefix}" \
+		--with-features=huge \
+		--enable-rubyinterp=yes \
+		--with-ruby-command="${objvim_prefix}/bin/objvim_ruby" \
+		--enable-pythoninterp \
+		--with-python-config-dir=/usr/lib/python*/config \
+		--enable-tclinterp \
+		--with-tclsh=/usr/bin/tclsh \
+		--enable-perlinterp \
+		--with-compiledby="${objvim_compiledby}"
+	make
+	make install
+
+	cd ${objvim_prefix}/bin
+	ln -sf vim vi
+}
+
