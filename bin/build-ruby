@@ -2,14 +2,5 @@
 . functions.sh
 
 set -e
-unpack ruby
-
-export CFLAGS="-I${objvim_prefix}/include"
-export LDFLAGS="-L${objvim_prefix}/lib"
-./configure \
-	--program-prefix=objvim_ \
-	--prefix=${objvim_prefix} \
-	--enable-shared
-make
-make install
+build_ruby
 
