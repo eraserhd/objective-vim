@@ -10,18 +10,21 @@ function set_up_environment() {
 function unpack() {
 	rm -rf "$1"*
 	tar xzf src/"$1"*.tar.gz
-	cd "$1"*
 }
 
 function build_yaml() {
 	unpack yaml
+	pushd yaml-*
 	./configure --prefix=${objvim_prefix}
 	make
 	make install
+	popd
 }
 
 function build_ruby() {
 	unpack ruby
+	pushd ruby-*
+
 	set_up_environment
 	./configure \
 		--program-prefix=objvim_ \
@@ -29,10 +32,12 @@ function build_ruby() {
 		--enable-shared
 	make
 	make install
+	popd
 }
 
 function build_vim() {
 	unpack vim
+	pushd vim
 
 	if command -v rvm >/dev/null 2>&1
 	then
@@ -55,6 +60,8 @@ function build_vim() {
 
 	cd ${objvim_prefix}/bin
 	ln -sf vim vi
+
+	popd
 }
 
 function install_pathogen() {
