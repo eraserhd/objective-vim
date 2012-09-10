@@ -1,5 +1,4 @@
 #!/bin/bash
-. config.sh
 . functions.sh
 
 set -e
