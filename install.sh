@@ -3,6 +3,24 @@
 objvim_prefix="/opt/objvim"
 objvim_compiledby="Jason Felice <jason.m.felice@gmail.com>"
 
+
+yaml_options=()
+ruby_options=(
+	--program-prefix=objvim_
+	--enable-shared
+	)
+vim_options=(
+	--with-features=huge
+	--enable-rubyinterp=yes
+	--with-ruby-command="${objvim_prefix}/bin/objvim_ruby"
+	--enable-pythoninterp
+	--with-python-config-dir=/usr/lib/python*/config
+	--enable-tclinterp
+	--with-tclsh=/usr/bin/tclsh
+	--enable-perlinterp
+	--with-compiledby="${objvim_compiledby}"
+	)
+
 function set_up_environment() {
 	export CFLAGS="-I${objvim_prefix}/include"
 	export LDFLAGS="-L${objvim_prefix}/lib"
@@ -22,10 +40,10 @@ function configure_and_make() {
 
 function build() {
 	local package=$1
-	shift
 	unpack $package
 	pushd ${package}*
-	configure_and_make "$@"
+	eval "local options=\$${package}_options"
+	configure_and_make "${options[@]}"
 	popd
 }
 
@@ -34,9 +52,7 @@ function build_yaml() {
 }
 
 function build_ruby() {
-	build ruby \
-		--program-prefix=objvim_ \
-		--enable-shared
+	build ruby
 }
 
 function build_vim() {
@@ -45,16 +61,7 @@ function build_vim() {
 		rvm use system
 	fi
 
-	build vim \
-		--with-features=huge \
-		--enable-rubyinterp=yes \
-		--with-ruby-command="${objvim_prefix}/bin/objvim_ruby" \
-		--enable-pythoninterp \
-		--with-python-config-dir=/usr/lib/python*/config \
-		--enable-tclinterp \
-		--with-tclsh=/usr/bin/tclsh \
-		--enable-perlinterp \
-		--with-compiledby="${objvim_compiledby}"
+	build vim
 
 	( cd ${objvim_prefix}/bin && ln -sf vim vi )
 }
