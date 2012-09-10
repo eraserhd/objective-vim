@@ -1,10 +1,9 @@
 #!/bin/bash
 . config.sh
+. functions.sh
 
 set -e
-rm -rf ruby-*
-tar xzf src/ruby-*.tar.gz
-cd ruby-*
+unpack ruby
 
 export CFLAGS="-I${objvim_prefix}/include"
 export LDFLAGS="-L${objvim_prefix}/lib"
