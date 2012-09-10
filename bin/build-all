@@ -8,3 +8,4 @@ mkdir /opt/objvim
 ./bin/build-yaml
 ./bin/build-ruby
 ./bin/build-vim
+./bin/install-pathogen
