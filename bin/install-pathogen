@@ -2,5 +2,4 @@
 . functions.sh
 
 set -e
-pathogen_url="https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
-curl -o ${objvim_prefix}/share/vim/vim73/autoload/pathogen.vim "$pathogen_url"
+install_pathogen

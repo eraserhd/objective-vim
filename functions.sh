@@ -57,3 +57,19 @@ function build_vim() {
 	ln -sf vim vi
 }
 
+function install_pathogen() {
+	pathogen_url="https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
+	curl -o ${objvim_prefix}/share/vim/vim73/autoload/pathogen.vim "$pathogen_url"
+}
+
+function build_all() {
+	set -e
+
+	rm -rf /opt/objvim
+	mkdir /opt/objvim
+
+	build_yaml
+	build_ruby
+	build_vim
+	install_pathogen
+}
