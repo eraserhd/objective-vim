@@ -34,25 +34,18 @@ function build_yaml() {
 }
 
 function build_ruby() {
-	unpack ruby
-	pushd ruby-*
-
-	configure_and_make \
+	build ruby \
 		--program-prefix=objvim_ \
 		--enable-shared
-	popd
 }
 
 function build_vim() {
-	unpack vim
-	pushd vim
-
 	if command -v rvm >/dev/null 2>&1
 	then
 		rvm use system
 	fi
 
-	configure_and_make \
+	build vim \
 		--with-features=huge \
 		--enable-rubyinterp=yes \
 		--with-ruby-command="${objvim_prefix}/bin/objvim_ruby" \
@@ -63,10 +56,7 @@ function build_vim() {
 		--enable-perlinterp \
 		--with-compiledby="${objvim_compiledby}"
 
-	cd ${objvim_prefix}/bin
-	ln -sf vim vi
-
-	popd
+	( cd ${objvim_prefix}/bin && ln -sf vim vi )
 }
 
 function install_pathogen() {
