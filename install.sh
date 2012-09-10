@@ -80,3 +80,9 @@ function build_all() {
 	build_vim
 	install_pathogen
 }
+
+if [[ -z "$objvim_develop" ]]
+then
+	build_all
+fi
+
