@@ -1,3 +1,4 @@
+#!/bin/bash
 
 objvim_prefix="/opt/objvim"
 objvim_compiledby="Jason Felice <jason.m.felice@gmail.com>"
@@ -12,26 +13,33 @@ function unpack() {
 	tar xzf src/"$1"*.tar.gz
 }
 
-function build_yaml() {
-	unpack yaml
-	pushd yaml-*
-	./configure --prefix=${objvim_prefix}
+function configure_and_make() {
+	set_up_environment
+	./configure --prefix=${objvim_prefix} "$@"
 	make
 	make install
+}
+
+function build() {
+	local package=$1
+	shift
+	unpack $package
+	pushd ${package}*
+	configure_and_make "$@"
 	popd
+}
+
+function build_yaml() {
+	build yaml
 }
 
 function build_ruby() {
 	unpack ruby
 	pushd ruby-*
 
-	set_up_environment
-	./configure \
+	configure_and_make \
 		--program-prefix=objvim_ \
-		--prefix=${objvim_prefix} \
 		--enable-shared
-	make
-	make install
 	popd
 }
 
@@ -44,8 +52,7 @@ function build_vim() {
 		rvm use system
 	fi
 
-	./configure \
-		--prefix="${objvim_prefix}" \
+	configure_and_make \
 		--with-features=huge \
 		--enable-rubyinterp=yes \
 		--with-ruby-command="${objvim_prefix}/bin/objvim_ruby" \
@@ -55,8 +62,6 @@ function build_vim() {
 		--with-tclsh=/usr/bin/tclsh \
 		--enable-perlinterp \
 		--with-compiledby="${objvim_compiledby}"
-	make
-	make install
 
 	cd ${objvim_prefix}/bin
 	ln -sf vim vi
@@ -85,4 +90,3 @@ if [[ -z "$objvim_develop" ]]
 then
 	build_all
 fi
-
