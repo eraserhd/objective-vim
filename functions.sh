@@ -13,6 +13,13 @@ function unpack() {
 	cd "$1"*
 }
 
+function build_yaml() {
+	unpack yaml
+	./configure --prefix=${objvim_prefix}
+	make
+	make install
+}
+
 function build_ruby() {
 	unpack ruby
 	set_up_environment

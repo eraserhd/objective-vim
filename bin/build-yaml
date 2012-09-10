@@ -2,7 +2,4 @@
 . functions.sh
 
 set -e
-unpack yaml
-./configure --prefix=${objvim_prefix}
-make
-make install
+build_yaml
