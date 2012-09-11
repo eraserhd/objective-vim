@@ -1,8 +1,6 @@
 #!/bin/bash
 
-objvim_prefix="/opt/objvim"
-objvim_compiledby="Jason Felice <jason.m.felice@gmail.com>"
-
+objvim_prefix=~/objvim
 
 yaml_options=()
 ruby_options=(
@@ -18,7 +16,6 @@ vim_options=(
 	--enable-tclinterp
 	--with-tclsh=/usr/bin/tclsh
 	--enable-perlinterp
-	--with-compiledby="${objvim_compiledby}"
 	)
 
 function set_up_environment() {
@@ -59,8 +56,8 @@ function install_pathogen() {
 function build_all() {
 	set -e
 
-	rm -rf /opt/objvim
-	mkdir /opt/objvim
+	rm -rf ${objvim_prefix}
+	mkdir ${objvim_prefix}
 
 	if command -v rvm >/dev/null 2>&1
 	then
