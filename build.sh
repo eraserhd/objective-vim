@@ -1,6 +1,7 @@
 #!/bin/bash
 
 objvim_prefix=~/objvim
+objvim_log=/tmp/objvim.log
 
 yaml_options=()
 ruby_options=(
@@ -30,18 +31,20 @@ function unpack() {
 
 function configure_and_make() {
 	set_up_environment
-	./configure --prefix=${objvim_prefix} "$@"
-	make
-	make install
+	./configure --prefix=${objvim_prefix} "$@" >>$objvim_log 2>&1
+	make >>$objvim_log 2>&1
+	make install >>$objvim_log 2>&1
 }
 
 function build() {
 	local package=$1
+	printf 'Building %s... ' $package
 	unpack $package
-	pushd ${package}*
+	pushd ${package}* >/dev/null 2>&1
 	eval "local options=\$${package}_options"
 	configure_and_make "${options[@]}"
-	popd
+	popd >/dev/null 2>&1
+	printf 'OK\n'
 }
 
 function symlink_vi() {
@@ -49,12 +52,24 @@ function symlink_vi() {
 }
 
 function install_pathogen() {
+	printf 'Installing pathogen plugin... '
 	pathogen_url="https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
-	curl -o ${objvim_prefix}/share/vim/vim73/autoload/pathogen.vim "$pathogen_url"
+	curl -o ${objvim_prefix}/share/vim/vim73/autoload/pathogen.vim "$pathogen_url" >>$objvim_log 2>&1
+	printf 'OK\n'
+}
+
+function error_exit() {
+	printf '\n\n'
+	printf '  An error occurred while building stuff.  Please check %s for more details\n' "$objvim_log"
+	printf '  and definitely create a github issue if you cannot figure it out.\n'
+	printf '\n'
+	trap - EXIT
+	exit 1
 }
 
 function build_all() {
 	set -e
+	trap 'error_exit' EXIT
 
 	rm -rf ${objvim_prefix}
 	mkdir ${objvim_prefix}
@@ -69,6 +84,8 @@ function build_all() {
 	build vim
 	symlink_vi
 	install_pathogen
+
+	trap - EXIT
 }
 
 if [[ -z "$objvim_develop" ]]

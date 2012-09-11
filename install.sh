@@ -3,7 +3,9 @@
 set -e
 cd /tmp
 rm -rf objvim
-git clone https://github.com/eraserhd/objvim.git
+printf 'Getting sources... '
+git clone https://github.com/eraserhd/objvim.git >/tmp/objvim.log
+printf 'OK\n'
 cd ./objvim
 objvim_develop= ./build.sh
 cd ..
