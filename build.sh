@@ -53,8 +53,7 @@ function symlink_vi() {
 
 function install_pathogen() {
 	printf 'Installing pathogen plugin... '
-	pathogen_url="https://raw.github.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
-	curl -o ${objvim_prefix}/share/vim/vim73/autoload/pathogen.vim "$pathogen_url" >>$objvim_log 2>&1
+	cp src/pathogen.vim ${objvim_prefix}/share/vim/vim73/autoload/pathogen.vim
 	printf 'OK\n'
 }
 
