@@ -3,6 +3,9 @@
 objvim_prefix=~/objvim
 objvim_log=/tmp/objvim.log
 
+vim_dir=${objvim_prefix}/share/vim/vim73
+vim_bundle_dir=${vim_dir}/bundle
+
 yaml_options=()
 ruby_options=(
 	--program-prefix=objvim_
@@ -53,7 +56,14 @@ function symlink_vi() {
 
 function install_pathogen() {
 	printf 'Installing pathogen plugin... '
-	cp src/pathogen.vim ${objvim_prefix}/share/vim/vim73/autoload/pathogen.vim
+	cp src/pathogen.vim "${vim_dir}/autoload/pathogen.vim"
+	printf 'OK\n'
+}
+
+function install_command_t() {
+	printf 'Installing CommandT plugin... '
+	mkdir -p "${vim_bundle_dir}"
+	tar -xzf src/command-t.tar.gz -C "${vim_bundle_dir}"
 	printf 'OK\n'
 }
 
@@ -83,6 +93,7 @@ function build_all() {
 	build vim
 	symlink_vi
 	install_pathogen
+	install_command_t
 
 	trap - EXIT
 }
