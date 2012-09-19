@@ -76,6 +76,22 @@ function error_exit() {
 	exit 1
 }
 
+function run_tests() {
+	printf 'Running tests:\n'
+	local return_code=0
+	for test in test/*.vim; do
+		printf '  %s... ' "$test"
+		${objvim_prefix}/bin/vim -u "$test" >/dev/null 2>&1
+		if (( $? == 0 )); then
+			printf 'OK\n'
+		else
+			printf 'FAILED\n'
+			return_code=1
+		fi
+	done
+	return $return_code
+}
+
 function build_all() {
 	set -e
 	trap 'error_exit' EXIT
@@ -94,6 +110,8 @@ function build_all() {
 	symlink_vi
 	install_pathogen
 	install_command_t
+
+	run_tests
 
 	trap - EXIT
 }
