@@ -44,7 +44,8 @@ function build() {
 	printf 'Building %s... ' $package
 	unpack $package
 	pushd ${package}* >/dev/null 2>&1
-	eval "local options=\$${package}_options"
+	eval "local options=( \${${package}_options[@]} )"
+	echo "Using options: ${options[@]}" >>$objvim_log
 	configure_and_make "${options[@]}"
 	popd >/dev/null 2>&1
 	printf 'OK\n'
