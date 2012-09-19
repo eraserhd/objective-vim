@@ -3,8 +3,10 @@
 objvim_prefix=~/objvim
 objvim_log=/tmp/objvim.log
 
-vim_dir=${objvim_prefix}/share/vim/vim73
-vim_bundle_dir=${vim_dir}/bundle
+vim_share_dir=${objvim_prefix}/share/vim
+vimfiles_dir=${vim_share_dir}/vimfiles/after
+autoload_dir=${vimfiles_dir}/autoload
+vim_bundle_dir=${vimfiles_dir}/bundle
 
 yaml_options=()
 ruby_options=(
@@ -57,7 +59,8 @@ function symlink_vi() {
 
 function install_pathogen() {
 	printf 'Installing pathogen plugin... '
-	cp src/pathogen.vim "${vim_dir}/autoload/pathogen.vim"
+	mkdir -p "${autoload_dir}"
+	cp src/pathogen.vim "${autoload_dir}"
 	printf 'OK\n'
 }
 
@@ -77,12 +80,16 @@ function error_exit() {
 	exit 1
 }
 
+function run_test() {
+	${objvim_prefix}/bin/vim -u NORC -N "+source ${test}"
+}
+
 function run_tests() {
 	printf 'Running tests:\n'
 	local return_code=0
 	for test in test/*.vim; do
 		printf '  %s... ' "$test"
-		${objvim_prefix}/bin/vim -u "$test" >/dev/null 2>&1
+		run_test "${test}" >/dev/null 2>&1
 		if (( $? == 0 )); then
 			printf 'OK\n'
 		else
