@@ -4,9 +4,10 @@ objvim_prefix=~/objvim
 objvim_log=/tmp/objvim.log
 
 vim_share_dir=${objvim_prefix}/share/vim
-vimfiles_dir=${vim_share_dir}/vimfiles/after
+vimfiles_dir=${vim_share_dir}/vimfiles
 autoload_dir=${vimfiles_dir}/autoload
 vim_bundle_dir=${vimfiles_dir}/bundle
+ruby_command="${objvim_prefix}/bin/objvim_ruby"
 
 yaml_options=()
 ruby_options=(
@@ -16,7 +17,7 @@ ruby_options=(
 vim_options=(
 	--with-features=huge
 	--enable-rubyinterp=yes
-	--with-ruby-command="${objvim_prefix}/bin/objvim_ruby"
+	--with-ruby-command="${ruby_command}"
 	--enable-pythoninterp
 	--with-python-config-dir=/usr/lib/python*/config
 	--enable-tclinterp
@@ -68,6 +69,10 @@ function install_command_t() {
 	printf 'Installing CommandT plugin... '
 	mkdir -p "${vim_bundle_dir}"
 	tar -xzf src/command-t.tar.gz -C "${vim_bundle_dir}"
+	pushd "${vim_bundle_dir}/command-t/ruby/command-t" >/dev/null 2>&1
+	"$ruby_command" extconf.rb >>$objvim_log 2>&1
+	make >>$objvim_log 2>&1
+	popd >/dev/null 2>&1
 	printf 'OK\n'
 }
 
@@ -81,7 +86,7 @@ function error_exit() {
 }
 
 function run_test() {
-	${objvim_prefix}/bin/vim -u NORC -N "+source ${test}"
+	${objvim_prefix}/bin/vim -u "${test}" -N
 }
 
 function run_tests() {
