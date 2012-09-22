@@ -71,9 +71,8 @@ function install_pathogen() {
 }
 
 function install_command_t() {
-	printf 'Installing CommandT plugin... '
-	mkdir -p "${vim_bundle_dir}"
-	tar -xzf src/command-t.tar.gz -C "${vim_bundle_dir}"
+	install_bundle command-t
+	printf 'Building CommandT native bits... '
 	pushd "${vim_bundle_dir}/command-t/ruby/command-t" >/dev/null 2>&1
 	"$ruby_command" extconf.rb >>$objvim_log 2>&1
 	make >>$objvim_log 2>&1
