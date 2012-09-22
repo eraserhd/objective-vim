@@ -81,10 +81,11 @@ function install_command_t() {
 	printf 'OK\n'
 }
 
-function install_vim_ios() {
-	printf 'Installing ios.vim... '
+function install_bundle() {
+	local bundle=$1
+	printf 'Installing %s... ' "$bundle"
 	mkdir -p "${vim_bundle_dir}"
-	tar -xzf src/vim-ios.tar.gz -C "${vim_bundle_dir}"
+	tar -xzf "src/${bundle}.tar.gz" -C "${vim_bundle_dir}"
 	printf 'OK\n'
 }
 
@@ -135,7 +136,7 @@ function build_all() {
 	symlink_vi
 	install_pathogen
 	install_command_t
-	install_vim_ios
+	install_bundle vim-ios
 
 	run_tests
 
