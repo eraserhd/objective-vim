@@ -32,7 +32,12 @@ function set_up_environment() {
 
 function unpack() {
 	rm -rf "$1"*
-	tar xzf src/"$1"*.tar.gz
+	if [[ -f "src/$1.tar.gz" ]]
+	then
+		tar xzf src/"$1".tar.gz
+	else
+		tar xzf src/"$1"*.tar.gz
+	fi
 }
 
 function configure_and_make() {
@@ -73,6 +78,13 @@ function install_command_t() {
 	"$ruby_command" extconf.rb >>$objvim_log 2>&1
 	make >>$objvim_log 2>&1
 	popd >/dev/null 2>&1
+	printf 'OK\n'
+}
+
+function install_vim_ios() {
+	printf 'Installing ios.vim... '
+	mkdir -p "${vim_bundle_dir}"
+	tar -xzf src/vim-ios.tar.gz -C "${vim_bundle_dir}"
 	printf 'OK\n'
 }
 
@@ -123,6 +135,7 @@ function build_all() {
 	symlink_vi
 	install_pathogen
 	install_command_t
+	install_vim_ios
 
 	run_tests
 

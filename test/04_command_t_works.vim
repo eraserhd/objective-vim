@@ -10,4 +10,4 @@ function! CheckCommandTWorks()
   endtry
 endfunction
 
-autocmd VimEnter * call CheckCommandTWorks()<CR>
+autocmd VimEnter * call CheckCommandTWorks()
