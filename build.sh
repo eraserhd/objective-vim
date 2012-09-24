@@ -117,6 +117,17 @@ function run_tests() {
 	return $return_code
 }
 
+function use_system_ruby() {
+	if [[ -f ~/.rvm/scripts/rvm ]]
+	then
+		source ~/.rvm/scripts/rvm
+	fi
+	if [[ "$(command -v rvm 2>&1)" = "rvm" ]]
+	then
+		rvm use system >>$objvim_log 2>&1
+	fi
+}
+
 function build_all() {
 	set -e
 	trap 'error_exit' EXIT
@@ -124,11 +135,7 @@ function build_all() {
 	rm -rf ${objvim_prefix}
 	mkdir ${objvim_prefix}
 
-	if command -v rvm >/dev/null 2>&1
-	then
-		rvm use system
-	fi
-
+	use_system_ruby
 	build yaml
 	build ruby
 	build vim
