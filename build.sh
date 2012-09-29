@@ -144,6 +144,7 @@ function build_all() {
 	install_pathogen
 	install_command_t
 	install_bundle vim-ios
+	install_bundle clang_complete
 
 	run_tests
 	printf '\n\n'
