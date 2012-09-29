@@ -13,6 +13,7 @@ yaml_options=()
 ruby_options=(
 	--program-prefix=objvim_
 	--enable-shared
+	--disable-install-doc
 	)
 vim_options=(
 	--with-features=huge
@@ -145,6 +146,7 @@ function build_all() {
 	install_bundle vim-ios
 
 	run_tests
+	printf '\n\n'
 
 	trap - EXIT
 }
