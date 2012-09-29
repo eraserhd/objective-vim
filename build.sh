@@ -74,7 +74,7 @@ function install_pathogen() {
 function install_command_t() {
 	install_bundle command-t
 	printf 'Building CommandT native bits... '
-	pushd "${vim_bundle_dir}/command-t/ruby/command-t" >/dev/null 2>&1
+	builtin pushd "${vim_bundle_dir}/command-t/ruby/command-t" >/dev/null 2>&1
 	"$ruby_command" extconf.rb >>$objvim_log 2>&1
 	make >>$objvim_log 2>&1
 	popd >/dev/null 2>&1
