@@ -1,17 +1,17 @@
 #!/bin/bash
 
-objvim_prefix=~/objvim
-objvim_log=/tmp/objvim.log
+objective_vim_prefix=~/objective-vim
+objective_vim_log=/tmp/objective-vim.log
 
-vim_share_dir=${objvim_prefix}/share/vim
+vim_share_dir=${objective_vim_prefix}/share/vim
 vimfiles_dir=${vim_share_dir}/vimfiles
 autoload_dir=${vimfiles_dir}/autoload
 vim_bundle_dir=${vimfiles_dir}/bundle
-ruby_command="${objvim_prefix}/bin/objvim_ruby"
+ruby_command="${objective_vim_prefix}/bin/objective-vim-ruby"
 
 yaml_options=()
 ruby_options=(
-	--program-prefix=objvim_
+	--program-prefix=objective-vim-
 	--enable-shared
 	--disable-install-doc
 	)
@@ -27,8 +27,8 @@ vim_options=(
 	)
 
 function set_up_environment() {
-	export CFLAGS="-I${objvim_prefix}/include"
-	export LDFLAGS="-L${objvim_prefix}/lib"
+	export CFLAGS="-I${objective_vim_prefix}/include"
+	export LDFLAGS="-L${objective_vim_prefix}/lib"
 }
 
 function unpack() {
@@ -43,9 +43,9 @@ function unpack() {
 
 function configure_and_make() {
 	set_up_environment
-	./configure --prefix=${objvim_prefix} "$@" >>$objvim_log 2>&1
-	make >>$objvim_log 2>&1
-	make install >>$objvim_log 2>&1
+	./configure --prefix=${objective_vim_prefix} "$@" >>$objective_vim_log 2>&1
+	make >>$objective_vim_log 2>&1
+	make install >>$objective_vim_log 2>&1
 }
 
 function build() {
@@ -54,14 +54,14 @@ function build() {
 	unpack $package
 	pushd ${package}* >/dev/null 2>&1
 	eval "local options=( \${${package}_options[@]} )"
-	echo "Using options: ${options[@]}" >>$objvim_log
+	echo "Using options: ${options[@]}" >>$objective_vim_log
 	configure_and_make "${options[@]}"
 	popd >/dev/null 2>&1
 	printf 'OK\n'
 }
 
 function symlink_vi() {
-	( cd ${objvim_prefix}/bin && ln -sf vim vi )
+	( cd ${objective_vim_prefix}/bin && ln -sf vim vi )
 }
 
 function install_pathogen() {
@@ -75,8 +75,8 @@ function install_command_t() {
 	install_bundle command-t
 	printf 'Building CommandT native bits... '
 	builtin pushd "${vim_bundle_dir}/command-t/ruby/command-t" >/dev/null 2>&1
-	"$ruby_command" extconf.rb >>$objvim_log 2>&1
-	make >>$objvim_log 2>&1
+	"$ruby_command" extconf.rb >>$objective_vim_log 2>&1
+	make >>$objective_vim_log 2>&1
 	popd >/dev/null 2>&1
 	printf 'OK\n'
 }
@@ -91,7 +91,7 @@ function install_bundle() {
 
 function error_exit() {
 	printf '\n\n'
-	printf '  An error occurred while building stuff.  Please check %s for more details\n' "$objvim_log"
+	printf '  An error occurred while building stuff.  Please check %s for more details\n' "$objective_vim_log"
 	printf '  and definitely create a github issue if you cannot figure it out.\n'
 	printf '\n'
 	trap - EXIT
@@ -99,7 +99,7 @@ function error_exit() {
 }
 
 function run_test() {
-	${objvim_prefix}/bin/vim -u "${test}" -N
+	${objective_vim_prefix}/bin/vim -u "${test}" -N
 }
 
 function run_tests() {
@@ -125,7 +125,7 @@ function use_system_ruby() {
 	fi
 	if [[ "$(command -v rvm 2>&1)" = "rvm" ]]
 	then
-		rvm use system >>$objvim_log 2>&1
+		rvm use system >>$objective_vim_log 2>&1
 	fi
 }
 
@@ -133,8 +133,8 @@ function build_all() {
 	set -e
 	trap 'error_exit' EXIT
 
-	rm -rf ${objvim_prefix}
-	mkdir ${objvim_prefix}
+	rm -rf ${objective_vim_prefix}
+	mkdir ${objective_vim_prefix}
 
 	use_system_ruby
 	build yaml
@@ -152,7 +152,7 @@ function build_all() {
 	trap - EXIT
 }
 
-if [[ -z "$objvim_develop" ]]
+if [[ -z "$objective_vim_develop" ]]
 then
 	build_all
 fi

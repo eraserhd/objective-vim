@@ -2,11 +2,11 @@
 
 set -e
 cd /tmp
-rm -rf objvim
+rm -rf objective-vim
 printf 'Getting sources... '
-git clone https://github.com/eraserhd/objvim.git >/tmp/objvim.log
+git clone https://github.com/eraserhd/objective-vim.git >/tmp/objective-vim.log
 printf 'OK\n'
-cd ./objvim
-objvim_develop= ./build.sh
+cd ./objective-vim
+objective_vim_develop= ./build.sh
 cd ..
-rm -rf objvim
+rm -rf objective-vim
