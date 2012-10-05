@@ -35,24 +35,24 @@ function unpack() {
 	rm -rf "$1"*
 	if [[ -f "src/$1.tar.gz" ]]
 	then
-		tar xzf src/"$1".tar.gz
+		tar xzf src/"$1".tar.gz || fail
 	else
-		tar xzf src/"$1"*.tar.gz
+		tar xzf src/"$1"*.tar.gz || fail
 	fi
 }
 
 function configure_and_make() {
 	set_up_environment
-	./configure --prefix=${objective_vim_prefix} "$@" >>$objective_vim_log 2>&1
-	make >>$objective_vim_log 2>&1
-	make install >>$objective_vim_log 2>&1
+	./configure --prefix=${objective_vim_prefix} "$@" >>$objective_vim_log 2>&1 || fail
+	make >>$objective_vim_log 2>&1 || fail
+	make install >>$objective_vim_log 2>&1 || fail
 }
 
 function build() {
 	local package=$1
 	printf 'Building %s... ' $package
 	unpack $package
-	pushd ${package}* >/dev/null 2>&1
+	builtin pushd ${package}* >/dev/null 2>&1 || fail
 	eval "local options=( \${${package}_options[@]} )"
 	echo "Using options: ${options[@]}" >>$objective_vim_log
 	configure_and_make "${options[@]}"
@@ -67,16 +67,16 @@ function symlink_vi() {
 function install_pathogen() {
 	printf 'Installing pathogen plugin... '
 	mkdir -p "${autoload_dir}"
-	cp src/pathogen.vim "${autoload_dir}"
+	cp src/pathogen.vim "${autoload_dir}" || fail
 	printf 'OK\n'
 }
 
 function install_command_t() {
 	install_bundle command-t
 	printf 'Building CommandT native bits... '
-	builtin pushd "${vim_bundle_dir}/command-t/ruby/command-t" >/dev/null 2>&1
-	"$ruby_command" extconf.rb >>$objective_vim_log 2>&1
-	make >>$objective_vim_log 2>&1
+	builtin pushd "${vim_bundle_dir}/command-t/ruby/command-t" >/dev/null 2>&1 || fail
+	"$ruby_command" extconf.rb >>$objective_vim_log 2>&1 || fail
+	make >>$objective_vim_log 2>&1 || fail
 	popd >/dev/null 2>&1
 	printf 'OK\n'
 }
@@ -85,11 +85,11 @@ function install_bundle() {
 	local bundle=$1
 	printf 'Installing %s... ' "$bundle"
 	mkdir -p "${vim_bundle_dir}"
-	tar -xzf "src/${bundle}.tar.gz" -C "${vim_bundle_dir}"
+	tar -xzf "src/${bundle}.tar.gz" -C "${vim_bundle_dir}" || fail
 	printf 'OK\n'
 }
 
-function error_exit() {
+function fail() {
 	printf '\n\n'
 	printf '  An error occurred while building stuff.  Please check %s for more details\n' "$objective_vim_log"
 	printf '  and definitely create a github issue if you cannot figure it out.\n'
@@ -100,6 +100,7 @@ function error_exit() {
 
 function run_test() {
 	${objective_vim_prefix}/bin/vim -u "${test}" -N
+	return $?
 }
 
 function run_tests() {
@@ -130,9 +131,6 @@ function use_system_ruby() {
 }
 
 function build_all() {
-	set -e
-	trap 'error_exit' EXIT
-
 	rm -rf ${objective_vim_prefix}
 	mkdir ${objective_vim_prefix}
 
@@ -148,8 +146,6 @@ function build_all() {
 
 	run_tests
 	printf '\n\n'
-
-	trap - EXIT
 }
 
 if [[ -z "$objective_vim_develop" ]]
