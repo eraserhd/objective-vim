@@ -1,5 +1,5 @@
-objvim
-======
+Objective Vim
+=============
 
 Scripts for building a nice console Vim for Mac OS X with support for iOS
 development.
@@ -16,3 +16,18 @@ following in your .bash_profile to use it instead of the system vim:
 ``` bash
 export PATH=~/objective-vim/bin:"$PATH"
 ```
+
+What It Has
+===========
+
+It has the following features:
+
+ * Ruby scripting support (using 1.9.3)
+ * Python scripting support (using system python)
+
+It includes the following plugins:
+
+ * CommandT
+ * clang\_complete
+ * ios.vim
+ 
