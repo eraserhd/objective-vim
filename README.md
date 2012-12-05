@@ -30,4 +30,5 @@ It includes the following plugins:
  * CommandT
  * clang\_complete
  * ios.vim
+ * kiwi.vim
  
