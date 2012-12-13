@@ -130,6 +130,20 @@ function use_system_ruby() {
 	fi
 }
 
+function build_tmux_MacOSX_pasteboard() {
+	local package=tmux-MacOSX-pasteboard
+	printf 'Building %s... ' $package
+	unpack $package
+	builtin pushd ${package}* >/dev/null 2>&1 || fail
+
+	set_up_environment
+	make >>$objective_vim_log 2>&1 || fail
+	cp reattach-to-user-namespace "${objective_vim_prefix}/bin/" || fail
+
+	popd >/dev/null 2>&1
+	printf 'OK\n'
+}
+
 function build_all() {
 	rm -rf ${objective_vim_prefix}
 	mkdir ${objective_vim_prefix}
@@ -139,6 +153,7 @@ function build_all() {
 	build ruby
 	build vim
 	symlink_vi
+	build_tmux_MacOSX_pasteboard
 	install_pathogen
 	install_command_t
 	install_bundle vim-ios
