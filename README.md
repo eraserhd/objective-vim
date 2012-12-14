@@ -32,3 +32,10 @@ It includes the following plugins:
  * ios.vim
  * kiwi.vim
  
+It also installs [reattach-to-user-namespace] which can be used
+within [tmux] to restore the functioning of pbcopy, pbpaste, and Vim's
+`"+` register.
+
+[reattach-to-user-namespace]: https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard
+[tmux]: http://tmux.sourceforge.net/
+
