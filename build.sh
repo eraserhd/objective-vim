@@ -144,6 +144,12 @@ function build_tmux_MacOSX_pasteboard() {
 	printf 'OK\n'
 }
 
+function update_helptags() {
+	printf 'Generating help tags... '
+	${objective_vim_prefix}/bin/vim -u update-helptags.vim -N >/dev/null 2>&1
+	printf 'OK\n'
+}
+
 function build_all() {
 	rm -rf ${objective_vim_prefix}
 	mkdir ${objective_vim_prefix}
@@ -159,6 +165,7 @@ function build_all() {
 	install_bundle vim-ios
 	install_bundle clang_complete
 	install_bundle vimux
+	update_helptags
 
 	run_tests
 	printf '\n\n'
