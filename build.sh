@@ -158,6 +158,7 @@ function build_all() {
 	install_command_t
 	install_bundle vim-ios
 	install_bundle clang_complete
+	install_bundle vimux
 
 	run_tests
 	printf '\n\n'
