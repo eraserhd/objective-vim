@@ -100,11 +100,13 @@ function install_YouCompleteMe() {
 	local clang_bin=$(xcrun -find clang)
 	local clang_dylib=$(dirname $(dirname "$clang_bin"))/lib/libclang.dylib
 
+	rm -rf ycm_build
 	mkdir ycm_build
 	builtin pushd ycm_build >/dev/null 2>&1 || fail
 	../cmake-*/bin/cmake -G "Unix Makefiles" -DEXTERNAL_LIBCLANG_PATH="$clang_dylib" \
 		. "${vim_bundle_dir}/YouCompleteMe/cpp" >>$objective_vim_log 2>&1 || fail
 	make ycm_core >>$objective_vim_log 2>&1 || fail
+	rm -rf ycm_build
 
 	popd >/dev/null 2>&1
 	printf 'OK\n'
