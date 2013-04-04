@@ -92,6 +92,24 @@ function install_command_t() {
 	printf 'OK\n'
 }
 
+
+function install_YouCompleteMe() {
+	install_bundle YouCompleteMe
+	printf 'Building YouCompleteMe native bits... '
+
+	local clang_bin=$(xcrun -find clang)
+	local clang_dylib=$(dirname $(dirname "$clang_bin"))/lib/libclang.dylib
+
+	mkdir ycm_build
+	builtin pushd ycm_build >/dev/null 2>&1 || fail
+	../cmake-*/bin/cmake -G "Unix Makefiles" -DEXTERNAL_LIBCLANG_PATH="$clang_dylib" \
+		. "${vim_bundle_dir}/YouCompleteMe/cpp" >>$objective_vim_log 2>&1 || fail
+	make ycm_core >>$objective_vim_log 2>&1 || fail
+
+	popd >/dev/null 2>&1
+	printf 'OK\n'
+}
+
 function install_bundle() {
 	local bundle=$1
 	printf 'Installing %s... ' "$bundle"
@@ -119,7 +137,7 @@ function run_tests() {
 	local return_code=0
 	for test in test/*.vim; do
 		printf '  %s... ' "$test"
-		run_test "${test}" >/dev/null 2>&1
+		run_test "${test}" >/dev/null 2>&1 </dev/null
 		if (( $? == 0 )); then
 			printf 'OK\n'
 		else
@@ -175,6 +193,7 @@ function build_all() {
 	install_pathogen
 	install_command_t
 	install_bundle vim-ios
+	install_YouCompleteMe
 	install_bundle vimux
 	update_helptags
 
