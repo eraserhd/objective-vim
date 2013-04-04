@@ -195,6 +195,7 @@ function build_all() {
 	install_bundle vim-ios
 	install_YouCompleteMe
 	install_bundle vimux
+	install_bundle syntastic
 	update_helptags
 
 	run_tests
