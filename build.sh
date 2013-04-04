@@ -25,7 +25,6 @@ vim_options=(
 	--with-tclsh=/usr/bin/tclsh
 	--enable-perlinterp
 	)
-cmake_options=()
 
 function set_up_environment() {
 	export CFLAGS="-I${objective_vim_prefix}/include"
@@ -43,30 +42,20 @@ function unpack() {
 }
 
 function configure_and_make() {
-	local skip_install=no
-	if [[ "$1" = "--skip-install" ]]
-	then
-		shift
-		skip_install=yes
-	fi
 	set_up_environment
 	./configure --prefix=${objective_vim_prefix} "$@" >>$objective_vim_log 2>&1 || fail
 	make >>$objective_vim_log 2>&1 || fail
-	if [[ x$skip_install = xno ]]
-	then
-		make install >>$objective_vim_log 2>&1 || fail
-	fi
+	make install >>$objective_vim_log 2>&1 || fail
 }
 
 function build() {
 	local package=$1
-	shift
 	printf 'Building %s... ' $package
 	unpack $package
 	builtin pushd ${package}* >/dev/null 2>&1 || fail
 	eval "local options=( \${${package}_options[@]} )"
 	echo "Using options: ${options[@]}" >>$objective_vim_log
-	configure_and_make "$@" "${options[@]}"
+	configure_and_make "${options[@]}"
 	popd >/dev/null 2>&1
 	printf 'OK\n'
 }
@@ -88,26 +77,6 @@ function install_command_t() {
 	builtin pushd "${vim_bundle_dir}/command-t/ruby/command-t" >/dev/null 2>&1 || fail
 	"$ruby_command" extconf.rb >>$objective_vim_log 2>&1 || fail
 	make >>$objective_vim_log 2>&1 || fail
-	popd >/dev/null 2>&1
-	printf 'OK\n'
-}
-
-
-function install_YouCompleteMe() {
-	install_bundle YouCompleteMe
-	printf 'Building YouCompleteMe native bits... '
-
-	local clang_bin=$(xcrun -find clang)
-	local clang_dylib=$(dirname $(dirname "$clang_bin"))/lib/libclang.dylib
-
-	rm -rf ycm_build
-	mkdir ycm_build
-	builtin pushd ycm_build >/dev/null 2>&1 || fail
-	../cmake-*/bin/cmake -G "Unix Makefiles" -DEXTERNAL_LIBCLANG_PATH="$clang_dylib" \
-		. "${vim_bundle_dir}/YouCompleteMe/cpp" >>$objective_vim_log 2>&1 || fail
-	make ycm_core >>$objective_vim_log 2>&1 || fail
-	rm -rf ycm_build
-
 	popd >/dev/null 2>&1
 	printf 'OK\n'
 }
@@ -139,7 +108,7 @@ function run_tests() {
 	local return_code=0
 	for test in test/*.vim; do
 		printf '  %s... ' "$test"
-		run_test "${test}" >/dev/null 2>&1 </dev/null
+		run_test "${test}" >/dev/null 2>&1
 		if (( $? == 0 )); then
 			printf 'OK\n'
 		else
@@ -189,15 +158,12 @@ function build_all() {
 	build yaml
 	build ruby
 	build vim
-	build cmake --skip-install
 	symlink_vi
 	build_tmux_MacOSX_pasteboard
 	install_pathogen
 	install_command_t
 	install_bundle vim-ios
-	install_YouCompleteMe
 	install_bundle vimux
-	install_bundle syntastic
 	update_helptags
 
 	run_tests
