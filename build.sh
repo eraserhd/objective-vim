@@ -25,6 +25,7 @@ vim_options=(
 	--with-tclsh=/usr/bin/tclsh
 	--enable-perlinterp
 	)
+cmake_options=()
 
 function set_up_environment() {
 	export CFLAGS="-I${objective_vim_prefix}/include"
@@ -42,20 +43,30 @@ function unpack() {
 }
 
 function configure_and_make() {
+	local skip_install=no
+	if [[ "$1" = "--skip-install" ]]
+	then
+		shift
+		skip_install=yes
+	fi
 	set_up_environment
 	./configure --prefix=${objective_vim_prefix} "$@" >>$objective_vim_log 2>&1 || fail
 	make >>$objective_vim_log 2>&1 || fail
-	make install >>$objective_vim_log 2>&1 || fail
+	if [[ x$skip_install = xno ]]
+	then
+		make install >>$objective_vim_log 2>&1 || fail
+	fi
 }
 
 function build() {
 	local package=$1
+	shift
 	printf 'Building %s... ' $package
 	unpack $package
 	builtin pushd ${package}* >/dev/null 2>&1 || fail
 	eval "local options=( \${${package}_options[@]} )"
 	echo "Using options: ${options[@]}" >>$objective_vim_log
-	configure_and_make "${options[@]}"
+	configure_and_make "$@" "${options[@]}"
 	popd >/dev/null 2>&1
 	printf 'OK\n'
 }
@@ -158,6 +169,7 @@ function build_all() {
 	build yaml
 	build ruby
 	build vim
+	build cmake --skip-install
 	symlink_vi
 	build_tmux_MacOSX_pasteboard
 	install_pathogen
