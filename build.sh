@@ -164,6 +164,7 @@ function build_all() {
 	install_command_t
 	install_bundle vim-ios
 	install_bundle vimux
+	install_bundle syntastic
 	update_helptags
 
 	run_tests
